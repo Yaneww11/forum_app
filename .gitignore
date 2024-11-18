@@ -1,0 +1,14 @@
+.idea/
+*.pyc
+db.sqlite3
+node_modules/
+fdm/dev.py
+filer_public/
+!filer_public/.gitkeep
+filer_public_thumbnails/filer_public/
+!filer_public_thumbnails/filer_public/.gitkeep
+media/
+!media/.gitkeep
+*.mo
+/static/
+*.venv
