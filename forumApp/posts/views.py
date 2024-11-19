@@ -45,12 +45,30 @@ class DashboardView(ListView, FormView):
     template_name = 'posts/dashboard.html'
     context_object_name = 'posts'
     form_class = SearchForm
+    paginate_by = 2
+    success_url =  reverse_lazy('dash')
 
-    # if query:
-    #     self.queryset = self.queryset.filter(title__icontains=query)
-    #
-    # return self.queryset
+    def get_queryset(self):
+        queryset = self.model.objects.all()
 
+        if not self.request.user.has_perm('posts.can_approve_posts'):
+            queryset = queryset.filter(approved=True)
+        else:
+            queryset = queryset.order_by('approved', 'created_at')
+
+        if 'query' in self.request.GET:
+            query = self.request.GET['query']
+            queryset = self.queryset.filter(title__icontains=query)
+
+        return queryset
+
+
+def approve_post(request, pk: int):
+    post = Post.objects.get(pk=pk)
+    post.approved = True
+    post.save()
+
+    return redirect(request.META.get('HTTP_REFERER'))
 
 class AddPostView(LoginRequiredMixin, CreateView):
     model = Post
