@@ -1,8 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from forumApp.posts.choices import LanguageChoice
 from forumApp.posts.validators import BadLanguageValidator
 
+
+UserModel = get_user_model()
 
 class Post(models.Model):
     title = models.CharField(
@@ -15,8 +18,9 @@ class Post(models.Model):
         )
     )
 
-    author = models.CharField(
-        max_length=30
+    author = models.ForeignKey(
+        to=UserModel,
+        on_delete=models.CASCADE,
     )
 
     created_at = models.DateTimeField(

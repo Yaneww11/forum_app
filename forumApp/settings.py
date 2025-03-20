@@ -108,6 +108,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+EMAIL_HOST_USER = ''   # Not needed for MailHog
+EMAIL_HOST_PASSWORD = '' # Not needed for MailHog
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
