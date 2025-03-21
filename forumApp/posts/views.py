@@ -1,4 +1,6 @@
 import asyncio
+from time import sleep
+
 from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin

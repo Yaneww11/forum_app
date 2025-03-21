@@ -27,8 +27,15 @@ SECRET_KEY = 'django-insecure-dzs&ui!mua2=f8&v@vw2&*$r12+957txws(jcjlidi-erw26ue
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'my-forum.bg',
+    'localhost',  # Add this
+    '127.0.0.1',  # Add this
+]
 
+
+# Add to your settings.py
+CSRF_TRUSTED_ORIGINS = ['http://my-forum.bg:81', 'http://localhost:81']
 
 # Application definition
 
@@ -133,6 +140,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = BASE_DIR / 'static_files'
+
 STATICFILES_DIRS = (
     BASE_DIR / 'staticfiles',
 )
