@@ -11,7 +11,7 @@ from forumApp.posts.models import Post, Comment
 class PostBaseForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ['approved']
+        exclude = ['approved', 'author']
 
         error_messages = {
             'title': {
