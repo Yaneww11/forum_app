@@ -1,5 +1,10 @@
+import asyncio
+from asgiref.sync import sync_to_async
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.forms import modelform_factory
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -11,6 +16,8 @@ from forumApp.posts.forms import PostCreateForm, PostDeleteForm, SearchForm, Pos
 from forumApp.posts.mixins import TimeRestrictedMixin
 from forumApp.posts.models import Post
 
+
+UserModel = get_user_model()
 
 @method_decorator(measure_execution_time, name='dispatch')
 @method_decorator(measure_execution_time, name='get')
@@ -62,6 +69,40 @@ class DashboardView(ListView, FormView):
 
         return queryset
 
+
+
+async def fetch_post_and_users(post_id):
+    posts = await Post.objects.select_related('author').aget(pk=post_id)
+    all_users = await sync_to_async(UserModel.objects.exclude)(id=posts.author.id)
+    all_users_to_list = await sync_to_async(list)(all_users)
+    return posts, all_users_to_list
+
+async def send_slow_email(subject, message, from_email, recipient_list):
+    await sync_to_async(send_mail)(
+        subject,
+        message,
+        from_email,
+        recipient_list
+    )
+
+async def notify_all_users(rquest, post_id):
+    posts, all_users = await fetch_post_and_users(post_id)
+
+    subject = f"New post: {posts.title}"
+    message = f"Hi, check out the new post: {posts.title} from {posts.author.username}"
+
+    email_tasks = [
+        send_slow_email(
+            subject,
+            message,
+            'no-reply@forymapp.com',
+            [user.email],
+        )
+        for user in all_users
+    ]
+
+    await asyncio.gather(*email_tasks)
+    return HttpResponse('OK')
 
 def approve_post(request, pk: int):
     post = Post.objects.get(pk=pk)

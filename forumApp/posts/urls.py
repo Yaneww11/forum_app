@@ -1,7 +1,7 @@
 
 from django.urls import path, include
 from forumApp.posts.views import dashboard, add_post, delete_post, details_page, edit_post, Index, PostDetailView, \
-    DashboardView, AddPostView, DeletePageView, approve_post
+    DashboardView, AddPostView, DeletePageView, approve_post, notify_all_users
 
 urlpatterns = [
     path('', Index.as_view(), name='index'),
@@ -12,5 +12,6 @@ urlpatterns = [
         path('delete-post/', DeletePageView.as_view(), name='delete-post'),
         path('details-post/', PostDetailView.as_view(), name='details-post'),
         path('edit-post/', edit_post, name='edit-post'),
-    ]))
+    ])),
+    path('notify-new-post/<int:post_id>/', notify_all_users, name='notify-new-post'),
 ]
