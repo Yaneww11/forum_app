@@ -22,7 +22,7 @@ class TimeRestrictedMixin:
     def dispatch(self, request, *args, **kwargs):
         current_time = localtime().time()
 
-        if not (self.start_time <= current_time <= self.end_time):
-            return HttpResponseForbidden(self.forbidden_message)
+        # if not (self.start_time <= current_time <= self.end_time):
+        #     return HttpResponseForbidden(self.forbidden_message)
 
         return super().dispatch(request, *args, **kwargs)
